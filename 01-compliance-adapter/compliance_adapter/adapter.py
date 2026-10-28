@@ -4,6 +4,7 @@ import time
 
 from compliance_logging_sdk.core import ComplianceLogger
 from compliance_logging_sdk.ClinicalSession import ClinicalSession
+from compliance_logging_sdk.ComplianceObject import ComplianceObject
 from compliance_logging_sdk.InferenceResult import InferenceResult
 from compliance_logging_sdk.SystemMetadata import SystemMetadata
 
