@@ -1,0 +1,8 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "compliance-backend"
+version = "0.0.1"
+dependencies = ["pydantic"]
