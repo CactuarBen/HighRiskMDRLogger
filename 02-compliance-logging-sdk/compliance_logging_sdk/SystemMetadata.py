@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-#  Information about the AI that generated the output
+#  information about the AI that generated the output
 class SystemMetadata(BaseModel):
-    model_name: str     # Name of the AI model release
-    model_version: str  # Version of the AI model release
+    model_name: str     # name of the AI model release
+    model_version: str  # version of the AI model release
