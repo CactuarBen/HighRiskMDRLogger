@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, ConfigDict
 
@@ -14,7 +13,7 @@ class EventResponse(BaseModel):
     model_name: str
     model_version: str
     input_data_hash: str
-    prediction: Optional[dict] = None
-    confidence: Optional[float] = None
+    prediction: dict[str, str] | None
+    confidence: float | None
     execution_time_ms: float
-    signature: Optional[str] = None
+    signature: str | None
