@@ -19,6 +19,12 @@ app = FastAPI(title="Compliance Backend")
 # incoming POST request that tells backend to create, then sign, then persist a record into db
 @app.post("/events", response_model=EventResponse, status_code=201)
 def create_event(event: EventRequest, db: DbSession) -> AuditLog:
+
+    # duplication check (indempotance), so that two events with same eventId couldn't be persisted 
+    existing = db.get(AuditLog, event.event_id)
+    if existing is not None:
+        return existing
+
     signature = sign(event.event_id, 
                      event.timestamp, 
                      event.system.model_name, 
