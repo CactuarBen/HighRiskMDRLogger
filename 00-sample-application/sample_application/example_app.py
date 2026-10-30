@@ -2,6 +2,7 @@ import random
 
 from compliance_adapter.adapter import ComplianceAdapter
 
+
 # simulates AI model, returns (prediction, confidence)
 # prediction is a dictionary and contains the proposed diagnosis as output
 # confidence represents how accurate is the prediction
