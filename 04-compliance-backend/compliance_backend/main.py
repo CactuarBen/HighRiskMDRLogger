@@ -29,7 +29,7 @@ def create_event(event: EventRequest, db: DbSession) -> AuditLog:
                          model_name=event.system.model_name, 
                          model_version=event.system.model_version, 
                          input_data_hash=event.clinical_session.input_data_hash, 
-                         rediction=event.clinical_session.inference_result.prediction, 
+                         prediction=event.clinical_session.inference_result.prediction, 
                          confidence=event.clinical_session.inference_result.confidence, 
                          execution_time=event.clinical_session.inference_result.execution_time_ms, 
                          signature=signature)
