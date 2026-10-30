@@ -1,0 +1,1 @@
+Reads the queue file and sends it to the backend using the POST request.
