@@ -5,7 +5,7 @@ from compliance_adapter.adapter import ComplianceAdapter
 # simulates AI model, returns (prediction, confidence)
 # prediction is a dictionary and contains the proposed diagnosis as output
 # confidence represents how accurate is the prediction
-def predict(image_bytes):
+def predict(image_bytes: bytes) -> tuple[dict[str, str], float]:
     if random.random() < 0.3:
         raise ValueError("model crashed")
     

@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 # sqlite:///audit.db creates a file audit.db
 # check_same_thread=False is required for SQLite with FastAPI
@@ -12,7 +12,8 @@ engine = create_engine(
 SessionLocal = sessionmaker(bind=engine)
 
 # Base is the parent class the table classes inherit from
-Base = declarative_base()
+class Base(DeclarativeBase):
+    pass
 
 # get_db() hands each API request its own session and closes it afterwards
 def get_db():

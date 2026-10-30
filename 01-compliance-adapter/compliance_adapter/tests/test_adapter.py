@@ -1,9 +1,11 @@
 import json
+from pathlib import Path
 
 from compliance_adapter.adapter import ComplianceAdapter
 
+
 # integration test examining adapter and SDK
-def test_finish_writes_one_event(tmp_path):
+def test_finish_writes_one_event(tmp_path: Path) -> None:
     # GIVEN
     # make a queue file path inside tmp_path
     queue_file = tmp_path / "queue.jsonl"
