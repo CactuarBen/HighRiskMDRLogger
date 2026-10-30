@@ -2,8 +2,8 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from .ClinicalSessionIn import ClinicalSessionIn
-from .SystemMetadataIn import SystemMetadataIn
+from .clinical_session_in import ClinicalSessionIn
+from .system_metadata_in import SystemMetadataIn
 
 
 # final full event accepted by POST /events

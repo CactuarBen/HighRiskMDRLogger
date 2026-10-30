@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
-from .InferenceResult import InferenceResult
+from .inference_result import InferenceResult
+
 
 # context of a single decision
 class ClinicalSession(BaseModel):

@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from .InferenceResultIn import InferenceResultIn
+from .inference_result_in import InferenceResultIn
 
 
 # context of a single decision, as it arrives in the request
