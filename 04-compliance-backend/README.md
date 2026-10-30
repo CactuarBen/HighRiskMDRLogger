@@ -8,3 +8,4 @@ Receives audit events, stores them in postgres database and allows audit to read
 4) Audit can read the events by accesing them as a GET /events/{id} or GET /events for all of them.
 
 Prerequsities
+- httpx2, needed by the tests (`pip install -e ".[dev]"`)

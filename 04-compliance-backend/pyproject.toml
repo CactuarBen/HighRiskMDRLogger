@@ -8,4 +8,4 @@ version = "0.0.1"
 dependencies = ["fastapi", "uvicorn", "sqlalchemy", "pydantic"]
 
 [project.optional-dependencies]
-dev = ["pytest", "httpx"]
+dev = ["pytest", "httpx2"]
