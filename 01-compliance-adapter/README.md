@@ -1,0 +1,1 @@
+Contains the ComplianceAdapter class responsible for attaching to the main application

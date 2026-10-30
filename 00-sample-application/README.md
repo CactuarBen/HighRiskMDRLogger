@@ -1,0 +1,1 @@
+Sample application representing the attachment points
