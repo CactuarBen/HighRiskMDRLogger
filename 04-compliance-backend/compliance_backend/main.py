@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
@@ -9,12 +11,14 @@ from .signing import sign
 
 Base.metadata.create_all(bind=engine)
 
+DbSession = Annotated[Session, Depends(get_db)]
+
 app = FastAPI(title="Compliance Backend")
 
 
 # incoming POST request that tells backend to create, then sign, then persist a record into db
 @app.post("/events", response_model=EventResponse, status_code=201)
-def create_event(event: EventRequest, db: Session = Depends(get_db)) -> AuditLog:
+def create_event(event: EventRequest, db: DbSession) -> AuditLog:
     signature = sign(event.event_id, 
                      event.timestamp, 
                      event.system.model_name, 
@@ -36,7 +40,7 @@ def create_event(event: EventRequest, db: Session = Depends(get_db)) -> AuditLog
 
 # incoming GET request that requests to present a specific event by ID
 @app.get("/events/{event_id}", response_model=EventResponse)
-def get_event(event_id: str, db: Session = Depends(get_db)) -> AuditLog:
+def get_event(event_id: str, db: DbSession) -> AuditLog:
     audit_log = db.get(AuditLog, event_id)
     if audit_log is None:
         raise HTTPException(status_code=404, detail="Event not found, make sure the event id is correct")
@@ -44,6 +48,6 @@ def get_event(event_id: str, db: Session = Depends(get_db)) -> AuditLog:
 
 # incoming GET request that requests to show all the persisted events
 @app.get("/events", response_model=list[EventResponse])
-def list_events(db: Session = Depends(get_db)) -> list[AuditLog]:
+def list_events(db: DbSession) -> list[AuditLog]:
     audit_log_all_events = db.query(AuditLog).order_by(AuditLog.timestamp.desc()).all()
     return audit_log_all_events
