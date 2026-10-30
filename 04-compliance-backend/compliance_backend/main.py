@@ -31,7 +31,7 @@ def create_event(event: EventRequest, db: DbSession) -> AuditLog:
                          input_data_hash=event.clinical_session.input_data_hash, 
                          prediction=event.clinical_session.inference_result.prediction, 
                          confidence=event.clinical_session.inference_result.confidence, 
-                         execution_time=event.clinical_session.inference_result.execution_time_ms, 
+                         execution_time_ms=event.clinical_session.inference_result.execution_time_ms, 
                          signature=signature)
     db.add(audit_log)
     db.commit()
