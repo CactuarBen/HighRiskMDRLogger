@@ -24,12 +24,13 @@ def main():
     inputs = [b"first scan", b"second scan", b"third scan"]
 
     for data in inputs:
+        adapter.start(data)
         try:
-            adapter.start(data)
             prediction, confidence = predict(data)
-            adapter.finish(prediction, confidence)
-        except Exception as e:
+        except ValueError as e:
             adapter.error(e)
+            continue
+        adapter.finish(prediction, confidence)
 
 if __name__ == "__main__":
     main()
