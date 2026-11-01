@@ -12,7 +12,7 @@ class ComplianceLogger:
 
     # append one event to the queue file as a single line of json
     def write_event(self, event: ComplianceObject) -> None:
-        with open(self.queue_file, "a") as f:
+        with open(self.queue_file, "a", encoding="utf-8") as f:
             f.write(event.model_dump_json() + "\n")
 
     # shut the logger down

@@ -177,7 +177,9 @@ class FakeBackend:
 # create a forwarder that would be sending events from queue.jsonl to backend
 def make_forwarder(tmp_path: Path, backend: FakeBackend, **settings: Any) -> Forwarder:
     client = httpx.Client(transport=httpx.MockTransport(backend))
-    return Forwarder(str(tmp_path / "queue.jsonl"), "http://backend", str(tmp_path / "state"), client=client, **settings)
+    return Forwarder(
+        str(tmp_path / "queue.jsonl"), "http://backend", str(tmp_path / "state"), client=client, **settings
+    )
 
 
 # mock SDK that adds one event at a time to the queue file

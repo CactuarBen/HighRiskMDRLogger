@@ -1,0 +1,32 @@
+# settings for the Pylint check (.github/workflows/pylint.yml)
+#
+# the checks below are switched off because the project does it differently on purpose:
+#   missing-*-docstring    the code is documented with comments above it, not with docstrings
+#   too-few-public-methods ORM models, data holders and the small fake backend in the tests have few or no methods
+#   redefined-outer-name   how pytest fixtures work: a test asks for a fixture by naming it as an argument
+#   import-outside-toplevel the tests import the backend inside the functions on purpose (see the conftest.py files)
+#   duplicate-code         the two conftest.py files repeat some fixtures, they belong to separate test suites
+
+[MESSAGES CONTROL]
+disable=missing-module-docstring,
+        missing-class-docstring,
+        missing-function-docstring,
+        too-few-public-methods,
+        redefined-outer-name,
+        import-outside-toplevel,
+        duplicate-code
+
+[FORMAT]
+max-line-length=120
+# lines that only hold a comment may be longer
+ignore-long-lines=^\s*#.*$
+
+[DESIGN]
+# the forwarder takes its settings as arguments and keeps them as attributes
+max-args=8
+max-positional-arguments=8
+max-attributes=12
+
+[BASIC]
+# SessionLocal is the name SQLAlchemy's own documentation uses for the session factory
+good-names=i,j,k,ex,Run,_,SessionLocal

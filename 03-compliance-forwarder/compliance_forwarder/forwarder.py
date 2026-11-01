@@ -38,25 +38,25 @@ class Forwarder:
         self.poll_seconds = poll_seconds
         self.backoff_start_seconds = backoff_start_seconds
         self.backoff_max_seconds = backoff_max_seconds
-        self.failures = 0 
+        self.failures = 0
 
     # the number of lines that were already handled
     def read_cursor(self) -> int:
         if not self.cursor_file.exists():
             return 0
-        return int(self.cursor_file.read_text().strip() or 0)
+        return int(self.cursor_file.read_text(encoding="utf-8").strip() or 0)
 
     # keeps track of lines that were written into .tmp
     def save_cursor(self, cursor: int) -> None:
         temporary_file = self.cursor_file.with_suffix(".tmp")
-        temporary_file.write_text(str(cursor))
+        temporary_file.write_text(str(cursor), encoding="utf-8")
         os.replace(temporary_file, self.cursor_file)
 
     # the lines that were not handled yet
     def read_new_lines(self, cursor: int) -> list[str]:
         if not self.queue_file.exists():
             return []
-        complete_lines = self.queue_file.read_text().split("\n")[:-1]
+        complete_lines = self.queue_file.read_text(encoding="utf-8").split("\n")[:-1]
         return complete_lines[cursor:]
 
     # a line the backend will never accept is kept here, so it is not lost and does not block the lines behind it
@@ -66,7 +66,7 @@ class Forwarder:
             "reason": reason,
             "line": line,
         }
-        with self.dead_letter_file.open("a") as file:
+        with self.dead_letter_file.open("a", encoding="utf-8") as file:
             file.write(json.dumps(record) + "\n")
         logger.error("event dead-lettered: %s", reason)
 
@@ -88,7 +88,7 @@ class Forwarder:
 
         if response.is_success:
             return Outcome.SENT
-        
+
         if response.is_client_error:
             self.dead_letter(line, f"backend answered {response.status_code}")
             return Outcome.REJECTED
@@ -123,7 +123,11 @@ class Forwarder:
         delay = self.backoff_start_seconds * 2 ** (self.failures - 1)
         return min(delay, self.backoff_max_seconds)
 
-    def run_forever(self, stop: Callable[[], bool] = lambda: False, sleep: Callable[[float], None] = time.sleep,) -> None:
+    def run_forever(
+        self,
+        stop: Callable[[], bool] = lambda: False,
+        sleep: Callable[[float], None] = time.sleep,
+    ) -> None:
         while not stop():
             self.run_once()
             sleep(self.next_delay())

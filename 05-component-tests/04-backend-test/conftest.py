@@ -11,7 +11,8 @@ from sqlalchemy.pool import StaticPool
 @pytest.fixture
 def session_factory(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator["sessionmaker[Session]"]:
     monkeypatch.chdir(tmp_path)
-    from compliance_backend import audit_log
+    # importing audit_log registers the table on Base, nothing in this file uses the name
+    from compliance_backend import audit_log  # noqa: F401  # pylint: disable=unused-import
     from compliance_backend.database import Base
 
     # make every connection shares the same in-memory database

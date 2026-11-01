@@ -20,24 +20,24 @@ app = FastAPI(title="Compliance Backend")
 @app.post("/events", response_model=EventResponse, status_code=201)
 def create_event(event: EventRequest, db: DbSession) -> AuditLog:
 
-    # duplication check (indempotance), so that two events with same eventId couldn't be persisted 
+    # duplication check (indempotance), so that two events with same eventId couldn't be persisted
     existing = db.get(AuditLog, event.event_id)
     if existing is not None:
         return existing
 
-    signature = sign(event.event_id, 
-                     event.timestamp, 
-                     event.system.model_name, 
-                     event.system.model_version, 
+    signature = sign(event.event_id,
+                     event.timestamp,
+                     event.system.model_name,
+                     event.system.model_version,
                      event.clinical_session.input_data_hash)
-    audit_log = AuditLog(event_id=event.event_id, 
-                         timestamp=event.timestamp, 
-                         model_name=event.system.model_name, 
-                         model_version=event.system.model_version, 
-                         input_data_hash=event.clinical_session.input_data_hash, 
-                         prediction=event.clinical_session.inference_result.prediction, 
-                         confidence=event.clinical_session.inference_result.confidence, 
-                         execution_time_ms=event.clinical_session.inference_result.execution_time_ms, 
+    audit_log = AuditLog(event_id=event.event_id,
+                         timestamp=event.timestamp,
+                         model_name=event.system.model_name,
+                         model_version=event.system.model_version,
+                         input_data_hash=event.clinical_session.input_data_hash,
+                         prediction=event.clinical_session.inference_result.prediction,
+                         confidence=event.clinical_session.inference_result.confidence,
+                         execution_time_ms=event.clinical_session.inference_result.execution_time_ms,
                          signature=signature)
     db.add(audit_log)
     db.commit()

@@ -16,7 +16,9 @@ def recompute_signature(row: "AuditLog") -> str:
 
 
 # an SDK event forwarded from the queue
-def make_event(event_id: str = "event-1", timestamp: str = "2026-10-29T10:00:00Z",confidence: float | None = 0.9) -> dict[str, Any]:
+def make_event(
+    event_id: str = "event-1", timestamp: str = "2026-10-29T10:00:00Z", confidence: float | None = 0.9
+) -> dict[str, Any]:
     return {
         "event_id": event_id,
         "timestamp": timestamp,
@@ -110,7 +112,9 @@ def test_stored_row_still_matches_its_signature(client: TestClient, session_fact
         assert row.signature == recompute_signature(row)
 
 
-def test_signature_depends_on_the_secret_key(client: TestClient, session_factory: "sessionmaker[Session]", monkeypatch: pytest.MonkeyPatch) -> None:
+def test_signature_depends_on_the_secret_key(
+    client: TestClient, session_factory: "sessionmaker[Session]", monkeypatch: pytest.MonkeyPatch
+) -> None:
     from compliance_backend.audit_log import AuditLog
 
     client.post("/events", json=make_event())

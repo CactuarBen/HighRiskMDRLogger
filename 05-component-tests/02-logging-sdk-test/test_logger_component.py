@@ -41,7 +41,10 @@ def make_event(label: str = "healthy") -> ComplianceObject:
         # eventId gets assigned automatically
         # timestamp gets assigned automatically
         system=SystemMetadata(model_name="demo-model", model_version="1.0"),
-        clinical_session=ClinicalSession(input_data_hash="sha256-abc",inference_result=InferenceResult(prediction={"label": label}, confidence=0.9, execution_time_ms=1.5),),
+        clinical_session=ClinicalSession(
+            input_data_hash="sha256-abc",
+            inference_result=InferenceResult(prediction={"label": label}, confidence=0.9, execution_time_ms=1.5),
+        ),
     )
 
 # send three simple events to SDK and check output in jsonl
