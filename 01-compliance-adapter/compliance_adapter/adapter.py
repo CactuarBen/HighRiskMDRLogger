@@ -26,7 +26,7 @@ class ComplianceAdapter:
         self.start_time = time.perf_counter()
         self.input_hash = "sha256-" + hashlib.sha256(input_bytes).hexdigest()
 
-    def finish(self, prediction: dict[str, str], confidence: float | None) -> None:
+    def finish(self, prediction: dict[str, str], confidence: float | None) -> str:
         if self.start_time is None or self.input_hash is None:
             raise RuntimeError("finish() called before start()")
 
@@ -50,6 +50,7 @@ class ComplianceAdapter:
         self.logger.write_event(event)
         self.start_time = None
         self.input_hash = None
+        return event.event_id
 
     # writes the failure to Python's log, no audit event is produced yet
     def error(self, exception: BaseException) -> None:

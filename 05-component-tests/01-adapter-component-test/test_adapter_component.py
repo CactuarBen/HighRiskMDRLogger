@@ -106,6 +106,19 @@ def test_error_writes_no_event_but_logs_the_failure(tmp_path: Path, caplog: pyte
     assert "model crashed" in caplog.text
 
 
+# link between a patient and an event
+def test_finish_returns_the_id_of_the_event_it_logged(tmp_path: Path) -> None:
+    queue_file = tmp_path / "queue.jsonl"
+    adapter = ComplianceAdapter(str(queue_file), "demo-model", "1.0")
+
+    returned_ids: list[str] = []
+    for scan in (b"scan 1", b"scan 2"):
+        adapter.start(scan)
+        returned_ids.append(adapter.finish({"label": "healthy"}, 0.9))
+
+    assert returned_ids == [event["event_id"] for event in read_events(queue_file)]
+
+
 def test_every_event_gets_its_own_id(tmp_path: Path) -> None:
     queue_file = tmp_path / "queue.jsonl"
     adapter = ComplianceAdapter(str(queue_file), "demo-model", "1.0")

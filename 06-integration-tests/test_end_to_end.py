@@ -1,3 +1,4 @@
+import hashlib
 import json
 from collections.abc import Callable
 from pathlib import Path
@@ -169,3 +170,23 @@ def test_a_restarted_forwarder_sends_only_the_new_events(
 
     assert restarted.run_once() == 1
     assert len(stored_events(live_backend)) == 3
+
+
+def test_the_event_id_kept_by_the_application_finds_the_patients_event(
+    tmp_path: Path, live_backend: str, make_forwarder: Callable[[Path, str], Forwarder]
+) -> None:
+    queue_file = tmp_path / "queue.jsonl"
+    adapter = ComplianceAdapter(str(queue_file), "demo-model", "1.0")
+    scans = {"patient-7": b"scan of patient 7", "patient-8": b"scan of patient 8"}
+    event_ids: dict[str, str] = {}  # what the application stores in its own patient records
+
+    for patient, scan in scans.items():
+        adapter.start(scan)
+        event_ids[patient] = adapter.finish({"label": "healthy"}, 0.9)
+    make_forwarder(queue_file, live_backend).run_once()
+
+    response = httpx.get(f"{live_backend}/events/{event_ids['patient-7']}")
+
+    assert response.status_code == 200
+    expected_hash = "sha256-" + hashlib.sha256(scans["patient-7"]).hexdigest()
+    assert response.json()["input_data_hash"] == expected_hash  # patient 7's scan, not patient 8's

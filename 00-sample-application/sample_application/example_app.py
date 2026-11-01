@@ -18,19 +18,24 @@ def predict(image_bytes: bytes) -> tuple[dict[str, str], float]:
     
     return {"label": label}, confidence
 
-def main():
+def main() -> None:
     adapter = ComplianceAdapter("queue/queue.jsonl", "demo-model", "1.0")
 
-    inputs = [b"first scan", b"second scan", b"third scan"]
+    scans = {"patient-1": b"first scan", "patient-2": b"second scan", "patient-3": b"third scan"}
 
-    for data in inputs:
+    # let an auditor asks the application for the id of a patient, then reads the associated events
+    event_ids: dict[str, str] = {}
+
+    for patient, data in scans.items():
         adapter.start(data)
         try:
             prediction, confidence = predict(data)
         except ValueError as e:
             adapter.error(e)
             continue
-        adapter.finish(prediction, confidence)
+        event_ids[patient] = adapter.finish(prediction, confidence)
+
+    print(event_ids)
 
 if __name__ == "__main__":
     main()
